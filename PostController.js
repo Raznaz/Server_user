@@ -1,11 +1,9 @@
-import Post from './Post.js';
+import PostService from './PostService.js';
 
 class PostController {
   async create(req, res) {
     try {
-      const { author, title, content, picture } = req.body;
-      const post = await Post.create({ author, title, content, picture });
-      res.status(200).json(post);
+      const post = await PostService.create(req.body);
     } catch (error) {
       res.status(500).json(error);
     }
@@ -13,21 +11,17 @@ class PostController {
 
   async getAll(req, res) {
     try {
-      const posts = await Post.find();
+      const posts = await PostService.getAll();
       return res.json(posts);
-    } catch (error) {
-      res.status(500).json(error);
+    } catch (e) {
+      res.status(500).json(e);
     }
   }
 
   async getOne(req, res) {
     try {
-      const { id } = req.params;
-      if (!id) {
-        res.status(400).json({ message: 'ID incorrect' });
-      }
-      const post = await Post.findById(id);
-      return res.json(post);
+      const post = await PostService.getOne(req.params.id);
+      res.json(post);
     } catch (error) {
       res.status(500).json(error);
     }
@@ -35,27 +29,10 @@ class PostController {
 
   async update(req, res) {
     try {
-      const post = req.body;
-      if (!post._id) {
-        res.status(400).json({ message: 'ID not fined' });
-      }
-      const updPost = await Post.findByIdAndUpdate(post._id, post, {
-        new: true,
-      });
-      return res.json(updPost);
-    } catch (error) {
-      res.status(500).json(error);
-    }
-  }
-
-  async removePost(req, res) {
-    try {
-      const { id } = req.params;
-      if (!id) {
-        res.status(400).json({ message: 'ID not fined' });
-      }
-      const remPost = await Post.findByIdAndDelete(id);
-      return res.json(remPost);
+      const currentPost = req.body;
+      console.log(currentPost);
+      const newPost = await PostService.update(currentPost);
+      res.json(newPost);
     } catch (error) {
       res.status(500).json(error);
     }
