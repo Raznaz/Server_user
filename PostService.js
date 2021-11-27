@@ -20,23 +20,21 @@ class PostService {
   }
 
   async update(currentPost) {
+    if (!currentPost._id) {
+      throw new Error('no Post !');
+    }
     const updPost = await Post.findByIdAndUpdate(currentPost._id, currentPost, {
       new: true,
     });
     return updPost;
   }
 
-  async removePost(req, res) {
-    try {
-      const { id } = req.params;
-      if (!id) {
-        res.status(400).json({ message: 'ID not fined' });
-      }
-      const remPost = await Post.findByIdAndDelete(id);
-      return res.json(remPost);
-    } catch (error) {
-      res.status(500).json(error);
+  async removePost(id) {
+    if (!id) {
+      throw new Error('Dont have your  ID');
     }
+    const remPost = await Post.findByIdAndDelete(id);
+    return remPost;
   }
 }
 

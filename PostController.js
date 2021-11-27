@@ -29,10 +29,16 @@ class PostController {
 
   async update(req, res) {
     try {
-      const currentPost = req.body;
-      console.log(currentPost);
-      const newPost = await PostService.update(currentPost);
+      const newPost = await PostService.update(req.body);
       res.json(newPost);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
+  async removePost(req, res) {
+    try {
+      const post = await PostService.removePost(req.params.id);
     } catch (error) {
       res.status(500).json(error);
     }
